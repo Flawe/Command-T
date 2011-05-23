@@ -175,7 +175,8 @@ module CommandT
         :max_depth              => get_number('g:CommandTMaxDepth'),
         :always_show_dot_files  => get_bool('g:CommandTAlwaysShowDotFiles'),
         :never_show_dot_files   => get_bool('g:CommandTNeverShowDotFiles'),
-        :scan_dot_directories   => get_bool('g:CommandTScanDotDirectories')
+        :scan_dot_directories   => get_bool('g:CommandTScanDotDirectories'),
+		:file_types              => get_string('g:CommandTFileTypes')
     end
 
     def exists? name

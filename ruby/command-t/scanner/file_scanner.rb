@@ -34,6 +34,7 @@ module CommandT
       @max_depth            = options[:max_depth] || 15
       @max_files            = options[:max_files] || 10_000
       @scan_dot_directories = options[:scan_dot_directories] || false
+	  @file_types			= options[:file_types] || ''
     end
 
     def paths
@@ -68,13 +69,26 @@ module CommandT
       path = VIM::escape_for_single_quotes path
       ::VIM::evaluate("empty(expand(fnameescape('#{path}')))").to_i == 1
     end
+	
+	def explicit_file_type? path
+	  if (@file_types <=> '') == 0
+		return false
+	  end
+	  @file_types.split(',').each {
+		|extension|
+		if (File.extname(path) <=> extension) == 0
+		  return true
+		end
+	  }
+	  return false
+	end
 
     def add_paths_for_directory dir, accumulator
       Dir.foreach(dir) do |entry|
         next if ['.', '..'].include?(entry)
         path = File.join(dir, entry)
         unless path_excluded?(path)
-          if File.file?(path)
+          if File.file?(path) and explicit_file_type?(path)
             @files += 1
             raise FileLimitExceeded if @files > @max_files
             accumulator << path[@prefix_len + 1..-1]

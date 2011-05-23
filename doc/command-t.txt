@@ -470,6 +470,12 @@ Following is a list of all available options:
       you want the best match to appear in a fixed location on the screen
       but still be near the prompt at the bottom.
 
+                                                *g:CommandTFileTypes*
+  |g:CommandTFileTypes|                           string (default: '')
+
+      List of comma separated file extensions to explicitly search for,
+      everything else will be ignored.
+
 As well as the basic options listed above, there are a number of settings that
 can be used to override the default key mappings used by Command-T. For
 example, to set <C-x> as the mapping for cancelling (dismissing) the Command-T
