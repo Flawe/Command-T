@@ -24,5 +24,6 @@
 require 'command-t/vim'
 
 module CommandT
+  $cache_file = ".cmdt_cache"
   class Scanner; end
 end # module CommandT

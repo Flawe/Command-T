@@ -38,13 +38,22 @@ module CommandT
     end
 
     def paths
-      return @paths unless @paths.nil?
-      begin
+	  return @paths unless @paths.nil?
+      if File.exist?($cache_file)
+	    File.open($cache_file, "r") do |cache|
+		  if (Marshal.load(cache) <=> @path) == 0
+			@paths = Marshal.load(cache)
+		  end
+		end
+	  end
+	  return @paths unless @paths.nil?
+	  begin
         @paths = []
         @depth = 0
         @files = 0
         @prefix_len = @path.chomp('/').length
         add_paths_for_directory @path, @paths
+		cache_files @paths
       rescue FileLimitExceeded
       end
       @paths
@@ -52,12 +61,13 @@ module CommandT
 
     def flush
       @paths = nil
+	  lama
     end
 
     def path= str
       if @path != str
         @path = str
-        flush
+        @paths = nil
       end
     end
 
@@ -104,5 +114,12 @@ module CommandT
     rescue Errno::EACCES
       # skip over directories for which we don't have access
     end
+	
+	def cache_files files
+	  File.open($cache_file, "w") do |cache|
+		Marshal.dump(@path, cache)
+		Marshal.dump(@paths, cache)
+	  end
+	end
   end # class FileScanner
 end # module CommandT

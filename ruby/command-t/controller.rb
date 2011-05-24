@@ -25,6 +25,7 @@ require 'command-t/finder/buffer_finder'
 require 'command-t/finder/file_finder'
 require 'command-t/match_window'
 require 'command-t/prompt'
+require 'command-t/scanner'
 require 'command-t/vim/path_utilities'
 
 module CommandT
@@ -71,6 +72,7 @@ module CommandT
     def flush
       set_up_max_height
       set_up_file_finder
+	  File.delete($cache_file)
     end
 
     def handle_key
